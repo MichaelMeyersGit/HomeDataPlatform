@@ -19,9 +19,9 @@ public class TemperatureData  implements java.io.Serializable{
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	private long id ;
 	
-	private int identifier ;
+	private Integer identifier ;
 	
-	private double temperature ;
+	private Double temperature ;
 	
 	private int unit ;
 	
@@ -35,19 +35,19 @@ public class TemperatureData  implements java.io.Serializable{
 		this.id = id;
 	}
 
-	public int getIdentifier() {
+	public Integer getIdentifier() {
 		return identifier;
 	}
 
-	public void setIdentifier(int identifier) {
+	public void setIdentifier(Integer identifier) {
 		this.identifier = identifier;
 	}
 
-	public double getTemperature() {
+	public Double getTemperature() {
 		return temperature;
 	}
 
-	public void setTemperature(double temperature) {
+	public void setTemperature(Double temperature) {
 		this.temperature = temperature;
 	}
 
