@@ -1,0 +1,39 @@
+spring:
+  application:
+     name: HomeDataPlatform
+
+
+  datasource:
+    url: jdbc:h2:file:c:/data/homedataplatform;MV_STORE=FALSE;MVCC=FALSE
+    username: sa
+    password: 
+    driver-class-name: org.h2.Driver    
+
+  jpa:
+    hibernate:
+      ddl-auto: create
+    properties:
+      hibernate:
+        event:
+          merge:
+            entity_copy_observer: allow
+
+  h2:
+    console:
+      enabled: true 
+
+# logging
+logging:
+  level:
+    root: INFO
+    org.springframework: INFO
+    org.apache: INFO
+    de.mchme: DEBUG
+    
+# HTTP Server
+server:
+  port: 2222   # HTTP (Tomcat) port
+  error:
+    whitelabel: 
+      enabled: false
+  
