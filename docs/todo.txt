@@ -2,3 +2,8 @@
 Google Cloud App Engine Example
 
 https://github.com/GoogleCloudPlatform/getting-started-java/tree/master/helloworld-springboot
+
+
+Heroku Cloud deployen
+
+https://blog.codecentric.de/2015/10/spring-boot-anwendungen-bei-heroku-deployen/

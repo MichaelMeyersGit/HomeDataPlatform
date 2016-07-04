@@ -23,7 +23,7 @@ public class TemperatureData  implements java.io.Serializable{
 	
 	private Double temperature ;
 	
-	private int unit ;
+	private char unit ;
 	
 	private Date logDate ;
 
@@ -51,11 +51,11 @@ public class TemperatureData  implements java.io.Serializable{
 		this.temperature = temperature;
 	}
 
-	public int getUnit() {
+	public char getUnit() {
 		return unit;
 	}
 
-	public void setUnit(int unit) {
+	public void setUnit(char unit) {
 		this.unit = unit;
 	}
 

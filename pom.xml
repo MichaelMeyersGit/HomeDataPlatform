@@ -21,8 +21,8 @@
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<java.version>1.8</java.version>
-		<!--  put this variable into your Maven settings.xml -->
-	<!--  	<gcloud.directory>D:\javalibs\GoogleCloudSKD\google-cloud-sdk</gcloud.directory> -->
+		<!-- put this variable into your Maven settings.xml -->
+		<!-- <gcloud.directory>D:\javalibs\GoogleCloudSKD\google-cloud-sdk</gcloud.directory> -->
 	</properties>
 
 	<dependencies>
@@ -55,6 +55,12 @@
 		<dependency>
 			<groupId>com.google.code.gson</groupId>
 			<artifactId>gson</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.poi</groupId>
+			<artifactId>poi</artifactId>
+			<version>3.14</version>
 		</dependency>
 
 	</dependencies>

@@ -2,11 +2,11 @@ package de.mchme.homedataplatform.units;
 
 public class TemperatureUnits {
 	
-	public static final int KELVIN = 1 ;
-	public static final int FAHRENHEIT = 2 ;
-	public static final int CELSIUS = 3;
+	public static final char KELVIN = 'K' ;
+	public static final char FAHRENHEIT = 'F' ;
+	public static final char CELSIUS = 'C' ;
 	
-	public static boolean isValid(int unit) {
+	public static boolean isValid(char unit) {
 		boolean isValid = false;
 		
 		if(unit == KELVIN || unit == FAHRENHEIT || unit == CELSIUS) {
@@ -14,6 +14,27 @@ public class TemperatureUnits {
 		}
 		
 		return isValid;
+	}
+	
+	public static boolean isInValidRange(char unit, double value) {
+		boolean isValid = false;
+		
+		if ( unit == KELVIN) {
+			if (value >= 0) {
+				isValid = true;
+			}
+		} else if ( unit == FAHRENHEIT ) {
+			if(value >= -459.67) {
+				isValid = true;
+			}
+		} else if ( unit == CELSIUS ) {
+			if (value >= -273.15) {
+				isValid = true;
+			}
+		}
+		
+		return isValid ;
+		
 	}
 
 }
