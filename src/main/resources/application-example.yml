@@ -43,3 +43,7 @@ server:
 security:
   basic:
     enabled: false
+    
+# GCM
+gcm:
+  serverurl: https://gcm-http.googleapis.com/gcm/send      
