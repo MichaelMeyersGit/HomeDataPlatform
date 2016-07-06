@@ -2,16 +2,28 @@ package de.mchme.homedataplatform;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.Reader;
+import java.text.NumberFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
+import org.apache.commons.csv.CSVFormat;
+import org.apache.commons.csv.CSVRecord;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.SpringApplicationConfiguration;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.ResourceLoader;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
@@ -24,8 +36,9 @@ import org.springframework.test.web.servlet.ResultActions;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import de.mchme.homedataplatform.controler.TemperatureExportBody;
 import de.mchme.homedataplatform.data.TemperatureData;
+import de.mchme.homedataplatform.repositories.TemperatureRepository;
+import de.mchme.homedataplatform.temperature.controller.TemperatureExportBody;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = { HomeDataPlatformApplication.class , TestConfig.class } )
@@ -35,6 +48,12 @@ public class HomeDataPlatformApplicationTests {
 
 	@Autowired 
 	private MockMvc mvc;
+	
+	@Autowired
+	private TemperatureRepository tempRepo ;
+	
+	@Autowired
+	private ResourceLoader resourceLoader;
 	
 	@Test
 	public void contextLoads() {
@@ -309,5 +328,77 @@ public class HomeDataPlatformApplicationTests {
 			Assert.fail();
 		}
 		
+	}
+	
+
+	@Test
+	public void testTemperatureSearch() {
+		
+		try {
+			this.clearDatabase();
+			this.fillDatabase();
+			
+			Calendar cal = Calendar.getInstance();
+			cal.set(2016, Calendar.FEBRUARY, 1, 1, 0);
+			
+			Date startdate = cal.getTime();
+			
+			cal.set(2016, Calendar.FEBRUARY, 1, 11, 0);
+			Date enddate = cal.getTime();
+			
+			List<TemperatureData> templist = this.tempRepo.findByIdentifierAndLogDateBetween(1, startdate, enddate);
+			
+			int size = templist.size();
+			
+			Assert.assertTrue(size == 2);
+			
+		} catch (IOException | ParseException e) {
+			Assert.fail();
+		}
+		
+	}
+	
+	
+	
+	private void clearDatabase() {
+		this.tempRepo.deleteAll();
+	}
+	
+	private void fillDatabase() throws IOException, ParseException {
+		
+		SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy HH:mm");
+		
+		NumberFormat numberFormat = NumberFormat.getInstance(Locale.FRANCE);
+		
+		Resource resource = this.resourceLoader.getResource("classpath:Temperaturedata.csv");
+		File f = resource.getFile();
+		
+		Reader in = new FileReader(f);
+		Iterable<CSVRecord> records = CSVFormat.newFormat(';').parse(in);
+		
+		
+		
+		for (CSVRecord record : records) {
+		    String columnOne = record.get(0);
+		    String columnTwo = record.get(1);
+		    String unit = record.get(2);
+		    String columnFour = record.get(3);
+		    
+		    Integer identifier = Integer.parseInt(columnOne);
+		    Number number = numberFormat.parse(columnFour);
+		    Double temperature = number.doubleValue();
+		    Date logdate = dateFormat.parse(columnTwo);
+		    
+		    TemperatureData dt = new TemperatureData();
+		    dt.setIdentifier(identifier);
+		    dt.setLogDate(logdate);
+		    dt.setTemperature(temperature);
+		    dt.setUnit(unit.charAt(0));
+		    
+		    this.tempRepo.save(dt);
+		    
+		    
+		}
+
 	}
 }

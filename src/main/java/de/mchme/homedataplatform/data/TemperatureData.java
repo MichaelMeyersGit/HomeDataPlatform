@@ -7,6 +7,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 @Entity
 public class TemperatureData  implements java.io.Serializable{
 
@@ -25,6 +27,7 @@ public class TemperatureData  implements java.io.Serializable{
 	
 	private char unit ;
 	
+	@JsonFormat(pattern="yyyy-MM-dd HH:mm")
 	private Date logDate ;
 
 	public long getId() {

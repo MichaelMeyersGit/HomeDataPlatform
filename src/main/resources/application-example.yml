@@ -38,4 +38,8 @@ server:
   error:
     whitelabel: 
       enabled: false
-  
+      
+# Security
+security:
+  basic:
+    enabled: false

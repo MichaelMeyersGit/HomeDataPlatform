@@ -1,12 +1,18 @@
-package de.mchme.homedataplatform.controler;
+package de.mchme.homedataplatform.temperature.controller;
 
 import java.util.Date;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 public class TemperatureExportBody {
 	
 	
 	private int identifier ;
+	
+	@JsonFormat(pattern="yyyy-MM-dd HH:mm")
 	private Date startdate ;
+	
+	@JsonFormat(pattern="yyyy-MM-dd HH:mm")
 	private Date enddate ;
 	
 	public int getIdentifier() {

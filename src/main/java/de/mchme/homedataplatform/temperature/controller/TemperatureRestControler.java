@@ -1,4 +1,4 @@
-package de.mchme.homedataplatform.controler;
+package de.mchme.homedataplatform.temperature.controller;
 
 import java.util.ArrayList;
 import java.util.HashMap;
