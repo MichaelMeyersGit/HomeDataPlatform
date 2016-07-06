@@ -51,70 +51,7 @@ public class TemperatureRestControler {
 		
 		return new ResponseEntity<>(httpStatus);
 	}
-	
-
-	/**
-	 * will export the requested Temp Values to Excel
-	 * 
-	 * @param identifier
-	 * @param startdate
-	 * @param enddate
-	 * @param request
-	 * @param response
-	 * @return
-	 *//*
-    @RequestMapping(value="/temperature/export", method=RequestMethod.POST)
-	public ModelAndView exportTemperatureToExcel(
-			@RequestBody TemperatureExportBody exportBody,
-			HttpServletRequest request, 
-			HttpServletResponse response) {
-    	
-    	logger.debug("entering export");
-    	
-    	List<TemperatureData> templist = this.temperatureRepo.findByIdentifierAndLogDateBetween(exportBody.getIdentifier(), exportBody.getStartdate(), exportBody.getEnddate()) ;
-    	
-    	Map<String, Object> model = new HashMap<String, Object>();
-        //Sheet Name
-        model.put("sheetname", "TestSheetName");
-        //Headers List
-        List<String> headers = new ArrayList<String>();
-        headers.add("Date");
-        headers.add("Identifier");
-        headers.add("Temperature");
-        headers.add("Unit");
-        model.put("headers", headers);
-        
-        //Results Table (List<Object[]>)
-        
-        List<List<String>> results = new ArrayList<List<String>>();
-        
-        for(TemperatureData data : templist) {
-        	 List<String> myrow = new ArrayList<String>();
-        	 myrow.add(data.getLogDate().toString());
-        	 myrow.add(data.getIdentifier().toString());
-        	 myrow.add(data.getTemperature().toString());
-        	 myrow.add(Character.toString(data.getUnit()));
-        	 results.add(myrow);
-        }
-        
-        model.put("results",results);
-        
-        response.setContentType( "application/ms-excel" );
-        response.setHeader( "Content-disposition", "attachment; filename=myfile.xls" );
-        if(results.size() > 0) {
-        	response.setStatus(HttpStatus.OK.value());
-        } else {
-        	response.setStatus(HttpStatus.NO_CONTENT.value());
-        }
-        
-        logger.debug("leaving export");
-        
-        
-        return new ModelAndView(new ExcelView(), model);
 		
-    	
-	}*/
-	
 	
 	private boolean isValid(List<TemperatureData> temperatureList) {
 		boolean isValid = true;

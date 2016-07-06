@@ -256,28 +256,17 @@ public class HomeDataPlatformApplicationTests {
 	}
 
 	
-	/*@Test
+	@Test
 	public void testTemperatureExport() {
 		
 			
 		try {
 			
+			this.clearDatabase();
+			this.fillDatabase();
 					
-			Date now = Calendar.getInstance().getTime();
-			
-			TemperatureExportBody export = new TemperatureExportBody();
-			
-			export.setIdentifier(1);
-			export.setEnddate(now);
-			export.setStartdate(now);
-			
-			GsonBuilder gsonBuilder = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm");
-			Gson gson = gsonBuilder.create();
-			
-			String json = gson.toJson(export);
-				
-			
-			ResultActions actions = mvc.perform(post("/temperature/export").contentType(MediaType.APPLICATION_JSON).characterEncoding("UTF-8").content(json));
+			ResultActions actions = mvc.perform(post("/temperature/excelexport").param("identifier", "1").param("startdate", "2016-02-01 01:00").param("enddate", "2016-02-01 23:00"));
+		
 			
 			MvcResult result = actions.andReturn();
 			
@@ -289,34 +278,16 @@ public class HomeDataPlatformApplicationTests {
 			Assert.fail();
 		}
 		
-	}*/
+	}
 	
-/*	@Test
+	@Test
 	public void testTemperatureExportNoDataFound() {
 		
 			
 		try {
-			
-					
-			Date enddate = Calendar.getInstance().getTime();
-			Calendar cal = Calendar.getInstance() ;
-			cal.add(Calendar.DATE, 1);
-			
-			Date startdate = cal.getTime();
-						
-			TemperatureExportBody export = new TemperatureExportBody();
-			
-			export.setIdentifier(1);
-			export.setEnddate(enddate);
-			export.setStartdate(startdate);
-			
-			GsonBuilder gsonBuilder = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm");
-			Gson gson = gsonBuilder.create();
-			
-			String json = gson.toJson(export);
-				
-			
-			ResultActions actions = mvc.perform(post("/temperature/export").contentType(MediaType.APPLICATION_JSON).characterEncoding("UTF-8").content(json));
+							
+			ResultActions actions = mvc.perform(post("/temperature/excelexport").param("identifier", "1").param("startdate", "2016-07-12 12:00").param("enddate", "2016-07-11 12:00"));
+		
 			
 			MvcResult result = actions.andReturn();
 			
@@ -328,7 +299,7 @@ public class HomeDataPlatformApplicationTests {
 			Assert.fail();
 		}
 		
-	}*/
+	}
 	
 
 	@Test
