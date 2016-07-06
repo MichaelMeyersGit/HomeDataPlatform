@@ -38,7 +38,7 @@ import com.google.gson.GsonBuilder;
 
 import de.mchme.homedataplatform.data.TemperatureData;
 import de.mchme.homedataplatform.repositories.TemperatureRepository;
-import de.mchme.homedataplatform.temperature.controller.TemperatureExportBody;
+import de.mchme.homedataplatform.units.TemperatureUnits;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = { HomeDataPlatformApplication.class , TestConfig.class } )
@@ -256,7 +256,7 @@ public class HomeDataPlatformApplicationTests {
 	}
 
 	
-	@Test
+	/*@Test
 	public void testTemperatureExport() {
 		
 			
@@ -289,9 +289,9 @@ public class HomeDataPlatformApplicationTests {
 			Assert.fail();
 		}
 		
-	}
+	}*/
 	
-	@Test
+/*	@Test
 	public void testTemperatureExportNoDataFound() {
 		
 			
@@ -328,7 +328,7 @@ public class HomeDataPlatformApplicationTests {
 			Assert.fail();
 		}
 		
-	}
+	}*/
 	
 
 	@Test
@@ -355,6 +355,23 @@ public class HomeDataPlatformApplicationTests {
 		} catch (IOException | ParseException e) {
 			Assert.fail();
 		}
+		
+	}
+	
+	@Test
+	public void testCelsiusRangeFail() {
+		
+		boolean valid = TemperatureUnits.isInValidRange('C', -300.00);
+		
+		Assert.assertTrue( valid == false );
+	}
+	
+	@Test
+	public void testFahrenheitSuccess() {
+		
+		boolean valid = TemperatureUnits.isInValidRange('F', -459.67);
+		
+		Assert.assertTrue(valid);
 		
 	}
 	

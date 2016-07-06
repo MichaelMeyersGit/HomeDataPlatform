@@ -1,12 +1,6 @@
 package de.mchme.homedataplatform.temperature.controller;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,10 +11,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.ModelAndView;
 
 import de.mchme.homedataplatform.data.TemperatureData;
-import de.mchme.homedataplatform.excel.ExcelView;
 import de.mchme.homedataplatform.repositories.TemperatureRepository;
 import de.mchme.homedataplatform.units.TemperatureUnits;
 
@@ -70,7 +62,7 @@ public class TemperatureRestControler {
 	 * @param request
 	 * @param response
 	 * @return
-	 */
+	 *//*
     @RequestMapping(value="/temperature/export", method=RequestMethod.POST)
 	public ModelAndView exportTemperatureToExcel(
 			@RequestBody TemperatureExportBody exportBody,
@@ -121,7 +113,7 @@ public class TemperatureRestControler {
         return new ModelAndView(new ExcelView(), model);
 		
     	
-	}
+	}*/
 	
 	
 	private boolean isValid(List<TemperatureData> temperatureList) {

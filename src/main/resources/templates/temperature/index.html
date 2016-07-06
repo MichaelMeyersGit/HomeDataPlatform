@@ -1,10 +1,17 @@
 <!DOCTYPE HTML>
-<html>
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>Getting Started: Serving Web Content</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 </head>
 <body>
-  Hello World
+  
+  <form action="#" th:action="@{/temperature/excelexport}" th:object="${temperatureExportBody}" method="post">
+     	<p>Id: <input type="text" th:field="*{identifier}" /></p>
+        <p>Startdate: <input type="text" th:field="*{startdate}" /></p>
+        <p>Enddate: <input type="text" th:field="*{enddate}" /></p> 
+        <p><input type="submit" value="Submit" /> <input type="reset" value="Reset" /></p>
+    </form>
+  
 </body>
 </html>
