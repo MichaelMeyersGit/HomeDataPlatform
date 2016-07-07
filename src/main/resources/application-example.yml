@@ -43,6 +43,9 @@ server:
 security:
   basic:
     enabled: false
+  
+notification:
+  system: nma
     
 # GCM
 gcm:

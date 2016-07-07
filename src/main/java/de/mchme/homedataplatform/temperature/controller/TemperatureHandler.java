@@ -38,9 +38,9 @@ public class TemperatureHandler {
 		boolean isValid = isValid(temperatureList);
 				
 		if(isValid) {
-			this.temperatureRepo.save(temperatureList);
-			httpStatus = HttpStatus.OK;		
 			this.executeRules(temperatureList);
+			this.temperatureRepo.save(temperatureList);
+			httpStatus = HttpStatus.OK;					
 		}
 		
 		logger.debug("leaving addTemperature");

@@ -10,5 +10,7 @@ import de.mchme.homedataplatform.data.TemperatureData;
 public interface TemperatureRepository extends CrudRepository<TemperatureData, Long>{
 	
 	List<TemperatureData> findByIdentifierAndLogDateBetween(int identifier, Date startdate, Date enddate) ;
+	
+	List<TemperatureData> findByLogDateGreaterThanAndTemperatureGreaterThanEqual(Date logdate, double temperature) ;
 
 }

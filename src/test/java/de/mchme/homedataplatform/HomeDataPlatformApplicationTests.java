@@ -20,8 +20,6 @@ import org.apache.commons.csv.CSVRecord;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.core.io.Resource;
@@ -40,9 +38,8 @@ import com.google.gson.GsonBuilder;
 
 import de.mchme.homedataplatform.data.TemperatureData;
 import de.mchme.homedataplatform.repositories.TemperatureRepository;
-import de.mchme.homedataplatform.temperature.controller.TemperatureHandler;
 import de.mchme.homedataplatform.temperature.controller.TemperatureRestControler;
-import de.mchme.homedataplatform.units.TemperatureUnits;
+import de.mchme.homedataplatform.utils.RulesUtils;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = { HomeDataPlatformApplication.class , TestConfig.class } )
@@ -50,8 +47,11 @@ import de.mchme.homedataplatform.units.TemperatureUnits;
 @ActiveProfiles("example")
 public class HomeDataPlatformApplicationTests {
 	
-	private final static Logger logger = LoggerFactory.getLogger(HomeDataPlatformApplicationTests.class);
+//	private final static Logger logger = LoggerFactory.getLogger(HomeDataPlatformApplicationTests.class);
 
+	private final int TIMESPAN = 60 ;
+	private final double THRESHHOLD = 20.0 ;
+	
 	@Autowired 
 	private MockMvc mvc;
 	
@@ -460,19 +460,77 @@ public class HomeDataPlatformApplicationTests {
 	}
 	
 	@Test
-	public void testCelsiusRangeFail() {
+	public void testFindByLogDateGreatherThenAndByTemperatureGreaterThenSucces() {
+		final double t = THRESHHOLD;
 		
-		boolean valid = TemperatureUnits.isInValidRange('C', -300.00);
+		this.clearDatabase();
 		
-		Assert.assertTrue( valid == false );
+		TemperatureData dt = new TemperatureData();
+		dt.setIdentifier(1);
+		dt.setLogDate(Calendar.getInstance().getTime());
+		dt.setTemperature(t);
+		dt.setUnit('C');
+		
+		this.tempRepo.save(dt);
+		
+		Date startdate = RulesUtils.getTimespanDate(TIMESPAN);
+		
+		List<TemperatureData> list = this.tempRepo.findByLogDateGreaterThanAndTemperatureGreaterThanEqual(startdate, THRESHHOLD);
+		
+		int size = list.size() ;
+		
+		Assert.assertTrue(size == 1);
 	}
 	
 	@Test
-	public void testFahrenheitSuccess() {
+	public void testFindByLogDateGreatherThenAndByTemperatureGreaterThenFailDate() {
+		final double t = 21.0 ;
 		
-		boolean valid = TemperatureUnits.isInValidRange('F', -459.67);
+		this.clearDatabase();
 		
-		Assert.assertTrue(valid);
+		Calendar cal = Calendar.getInstance();
+		cal.set(Calendar.YEAR, 2015);
+		
+		Date logdate = cal.getTime();
+		
+		TemperatureData dt = new TemperatureData();
+		dt.setIdentifier(1);
+		dt.setLogDate(logdate);
+		dt.setTemperature(t);
+		dt.setUnit('C');
+		
+		this.tempRepo.save(dt);
+		
+		Date startdate = RulesUtils.getTimespanDate(TIMESPAN);
+		
+		List<TemperatureData> list = this.tempRepo.findByLogDateGreaterThanAndTemperatureGreaterThanEqual(startdate, THRESHHOLD);
+		
+		int size = list.size() ;
+		
+		Assert.assertTrue(size == 0);
+	}
+	
+	@Test
+	public void testFindByLogDateGreatherThenAndByTemperatureGreaterThenFailTemperature() {
+		final double t = THRESHHOLD - 0.1 ;
+		
+		this.clearDatabase();
+		
+		TemperatureData dt = new TemperatureData();
+		dt.setIdentifier(1);
+		dt.setLogDate(Calendar.getInstance().getTime());
+		dt.setTemperature(t);
+		dt.setUnit('C');
+		
+		this.tempRepo.save(dt);
+		
+		Date startdate = RulesUtils.getTimespanDate(TIMESPAN);
+		
+		List<TemperatureData> list = this.tempRepo.findByLogDateGreaterThanAndTemperatureGreaterThanEqual(startdate, THRESHHOLD);
+		
+		int size = list.size() ;
+		
+		Assert.assertTrue(size == 0);
 		
 	}
 	

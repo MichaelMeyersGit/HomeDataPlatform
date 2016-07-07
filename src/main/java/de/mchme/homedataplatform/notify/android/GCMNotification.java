@@ -9,7 +9,6 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
@@ -28,7 +27,7 @@ import de.mchme.homedataplatform.utils.RestUtils;
  * 
  * https://developers.google.com/cloud-messaging/topic-messaging#sending_topic_messages_from_the_server
  */
-@Component
+@Component("gcm")
 public class GCMNotification implements INotify {
 
 private final static Logger logger = LoggerFactory.getLogger(GCMNotification.class);
@@ -41,7 +40,7 @@ private final static Logger logger = LoggerFactory.getLogger(GCMNotification.cla
 	
 	
 	@Override
-	@Async
+//	@Async
 	public void sentNotification(String event, String message, String topic) {
 		logger.debug("entering sentNotification");
 		
@@ -63,6 +62,8 @@ private final static Logger logger = LoggerFactory.getLogger(GCMNotification.cla
 		
 		RestTemplate rest = RestUtils.getRestTemplate(logger);
 		
+		logger.debug("got the Rest Template");
+		
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_JSON);
 		headers.add("Authorization", apikey);
@@ -80,7 +81,6 @@ private final static Logger logger = LoggerFactory.getLogger(GCMNotification.cla
 		logger.debug("leaving sentNotification");
 		
 	}
-	
 	
 	class NotifyData {
 		
