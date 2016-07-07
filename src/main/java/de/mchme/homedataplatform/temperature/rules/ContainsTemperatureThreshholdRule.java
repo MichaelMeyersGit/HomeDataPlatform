@@ -18,7 +18,12 @@ public class ContainsTemperatureThreshholdRule {
 	
 	private List<TemperatureData> tempList ;
 	
-	private double threshold ;
+	private double threshhold ;
+	
+	public ContainsTemperatureThreshholdRule(List<TemperatureData> tempList, double threshhold) {
+		this.tempList = tempList ;
+		this.threshhold = threshhold ;
+	}
 	
 	@Condition
     public boolean when() {
@@ -28,8 +33,8 @@ public class ContainsTemperatureThreshholdRule {
 	  boolean evaluate = false;
       
       for(TemperatureData dt : this.tempList) {
-    	  if(dt.getTemperature() >= this.threshold) {
-    		  logger.debug("need to evaluate");
+    	  if(dt.getTemperature() >= this.threshhold) {
+    		  logger.debug("need to evaluate: " + dt.getTemperature() + " threshhold: " + this.threshhold);
     		  evaluate = true ;
     		  break ;
     	  }
@@ -44,21 +49,9 @@ public class ContainsTemperatureThreshholdRule {
 		logger.debug("enetering the Action");
 	}
 
-	public List<TemperatureData> getTempList() {
-		return tempList;
-	}
+	
 
-	public void setTempList(List<TemperatureData> tempList) {
-		this.tempList = tempList;
-	}
 
-	public double getThreshold() {
-		return threshold;
-	}
-
-	public void setThreshold(double threshold) {
-		this.threshold = threshold;
-	}
 	
 	
 

@@ -32,16 +32,15 @@ public class TemperatureRulesComponent {
 	
 	public TemperatureRulesComponent() {
 		logger.debug("entering TemperatureRulesComponent");
-		this.rulesEngine = RulesEngineBuilder.aNewRulesEngine().withSkipOnFirstAppliedRule(true).withSkipOnFirstFailedRule(true).build();		
+		this.rulesEngine = RulesEngineBuilder.aNewRulesEngine().withSkipOnFirstAppliedRule(false).withSkipOnFirstFailedRule(true).build();		
 	}
 	
 	public void executeRules(List<TemperatureData> temperatureList) {
 		logger.debug("entering execute Rules");
 		this.rulesEngine.clearRules();
 		
-		ContainsTemperatureThreshholdRule r1 = new ContainsTemperatureThreshholdRule();
-		r1.setTempList(temperatureList);
-		
+		ContainsTemperatureThreshholdRule r1 = new ContainsTemperatureThreshholdRule(temperatureList, this.threshhold);
+			
 		this.rulesEngine.registerRule(r1);
 		
 		this.rulesEngine.fireRules();
