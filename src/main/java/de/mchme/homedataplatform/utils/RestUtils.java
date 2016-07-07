@@ -15,6 +15,8 @@ import org.springframework.web.client.RestTemplate;
  */
 public class RestUtils {
 	
+	public static final String JSON_DATE_FORMAT = "yyyy-MM-dd HH:mm"; 
+	
 	public static RestTemplate getRestTemplate(Logger logger) {
 		RestTemplate restTemplate = new RestTemplate();
 		

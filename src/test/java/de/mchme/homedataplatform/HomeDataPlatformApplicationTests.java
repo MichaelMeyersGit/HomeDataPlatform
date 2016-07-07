@@ -20,6 +20,8 @@ import org.apache.commons.csv.CSVRecord;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.core.io.Resource;
@@ -38,6 +40,8 @@ import com.google.gson.GsonBuilder;
 
 import de.mchme.homedataplatform.data.TemperatureData;
 import de.mchme.homedataplatform.repositories.TemperatureRepository;
+import de.mchme.homedataplatform.temperature.controller.TemperatureHandler;
+import de.mchme.homedataplatform.temperature.controller.TemperatureRestControler;
 import de.mchme.homedataplatform.units.TemperatureUnits;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -45,6 +49,8 @@ import de.mchme.homedataplatform.units.TemperatureUnits;
 @WebAppConfiguration
 @ActiveProfiles("example")
 public class HomeDataPlatformApplicationTests {
+	
+	private final static Logger logger = LoggerFactory.getLogger(HomeDataPlatformApplicationTests.class);
 
 	@Autowired 
 	private MockMvc mvc;
@@ -60,7 +66,7 @@ public class HomeDataPlatformApplicationTests {
 	}
 	
 	@Test
-	public void testAddingTemperature() {
+	public void testAddingTemperatureList() {
 		
 			
 		try {
@@ -89,7 +95,7 @@ public class HomeDataPlatformApplicationTests {
 			
 			String json = gson.toJson(tempList);
 			
-			ResultActions actions = mvc.perform(post("/temperature/add").contentType(MediaType.APPLICATION_JSON).characterEncoding("UTF-8").content(json));
+			ResultActions actions = mvc.perform(post(TemperatureRestControler.ADDLIST).contentType(MediaType.APPLICATION_JSON).characterEncoding("UTF-8").content(json));
 			
 			MvcResult result = actions.andReturn();
 			
@@ -102,6 +108,43 @@ public class HomeDataPlatformApplicationTests {
 		}
 		
 	}
+	
+	@Test
+	public void testAddSingleTemperature() {
+		
+			
+		try {
+			
+			
+			Date now = Calendar.getInstance().getTime();
+			
+			TemperatureData d1 = new TemperatureData();
+			d1.setIdentifier(1);
+			d1.setTemperature(20.45);
+			d1.setLogDate(now);
+			d1.setUnit('K');
+			
+			
+			GsonBuilder gsonBuilder = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm");
+			Gson gson = gsonBuilder.create();
+			
+			String json = gson.toJson(d1);
+			
+			ResultActions actions = mvc.perform(post(TemperatureRestControler.ADDSINGLE).contentType(MediaType.APPLICATION_JSON).characterEncoding("UTF-8").content(json));
+			
+			MvcResult result = actions.andReturn();
+			
+			int status = result.getResponse().getStatus();
+			
+			Assert.assertTrue(status == HttpStatus.OK.value());
+		
+		} catch (Exception e) {
+			Assert.fail();
+		}
+		
+	}
+	
+	
 	
 	@Test
 	public void testMissingFieldIdentifierAddingTemperature() {
@@ -127,7 +170,7 @@ public class HomeDataPlatformApplicationTests {
 			
 			String json = gson.toJson(tempList);
 			
-			ResultActions actions = mvc.perform(post("/temperature/add").contentType(MediaType.APPLICATION_JSON).characterEncoding("UTF-8").content(json));
+			ResultActions actions = mvc.perform(post(TemperatureRestControler.ADDLIST).contentType(MediaType.APPLICATION_JSON).characterEncoding("UTF-8").content(json));
 			
 			MvcResult result = actions.andReturn();
 			
@@ -165,13 +208,13 @@ public class HomeDataPlatformApplicationTests {
 			
 			String json = gson.toJson(tempList);
 			
-			ResultActions actions = mvc.perform(post("/temperature/add").contentType(MediaType.APPLICATION_JSON).characterEncoding("UTF-8").content(json));
+			ResultActions actions = mvc.perform(post(TemperatureRestControler.ADDLIST).contentType(MediaType.APPLICATION_JSON).characterEncoding("UTF-8").content(json));
 			
 			MvcResult result = actions.andReturn();
 			
 			int status = result.getResponse().getStatus();
 			
-			Assert.assertTrue(status == HttpStatus.BAD_REQUEST.value());
+			Assert.assertTrue(status == HttpStatus.OK.value());
 		
 		} catch (Exception e) {
 			Assert.fail();
@@ -203,7 +246,7 @@ public class HomeDataPlatformApplicationTests {
 			
 			String json = gson.toJson(tempList);
 			
-			ResultActions actions = mvc.perform(post("/temperature/add").contentType(MediaType.APPLICATION_JSON).characterEncoding("UTF-8").content(json));
+			ResultActions actions = mvc.perform(post(TemperatureRestControler.ADDLIST).contentType(MediaType.APPLICATION_JSON).characterEncoding("UTF-8").content(json));
 			
 			MvcResult result = actions.andReturn();
 			
@@ -241,7 +284,7 @@ public class HomeDataPlatformApplicationTests {
 			
 			String json = gson.toJson(tempList);
 			
-			ResultActions actions = mvc.perform(post("/temperature/add").contentType(MediaType.APPLICATION_JSON).characterEncoding("UTF-8").content(json));
+			ResultActions actions = mvc.perform(post(TemperatureRestControler.ADDLIST).contentType(MediaType.APPLICATION_JSON).characterEncoding("UTF-8").content(json));
 			
 			MvcResult result = actions.andReturn();
 			
@@ -330,6 +373,93 @@ public class HomeDataPlatformApplicationTests {
 	}
 	
 	@Test
+	public void testTemperatureSearchWithoutDate() {
+		
+		try {
+			this.clearDatabase();
+					
+			List<TemperatureData> tempList = new ArrayList<TemperatureData>();
+			
+			TemperatureData d1 = new TemperatureData();
+			d1.setIdentifier(1);
+		    d1.setTemperature(20.45);
+			d1.setUnit('F');
+			
+			tempList.add(d1);
+			
+			GsonBuilder gsonBuilder = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm");
+			Gson gson = gsonBuilder.create();
+			
+			String json = gson.toJson(tempList);
+			
+		    mvc.perform(post(TemperatureRestControler.ADDLIST).contentType(MediaType.APPLICATION_JSON).characterEncoding("UTF-8").content(json));
+			
+			Calendar cal = Calendar.getInstance();
+			cal.set(Calendar.HOUR_OF_DAY, 1);
+			
+			Date startdate = cal.getTime();
+			
+			cal.set(Calendar.HOUR_OF_DAY , 23);
+			
+			Date enddate = cal.getTime();
+			
+			List<TemperatureData> templist = this.tempRepo.findByIdentifierAndLogDateBetween(1, startdate, enddate);
+			
+			int size = templist.size();
+			
+			Assert.assertTrue(size == 1);
+			
+		} catch ( Exception e) {
+			Assert.fail();
+		}
+		
+	}
+	
+	@Test
+	public void testTemperatureSearchWithoutDateFail() {
+		
+		try {
+			this.clearDatabase();
+					
+			List<TemperatureData> tempList = new ArrayList<TemperatureData>();
+			
+			TemperatureData d1 = new TemperatureData();
+			d1.setIdentifier(1);
+		    d1.setTemperature(20.45);
+			d1.setUnit('F');
+			
+			tempList.add(d1);
+			
+			GsonBuilder gsonBuilder = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm");
+			Gson gson = gsonBuilder.create();
+			
+			String json = gson.toJson(tempList);
+			
+		    mvc.perform(post(TemperatureRestControler.ADDLIST).contentType(MediaType.APPLICATION_JSON).characterEncoding("UTF-8").content(json));
+			
+			Calendar cal = Calendar.getInstance();
+			cal.set(Calendar.HOUR_OF_DAY, 1);
+			cal.set(Calendar.YEAR, 2015);
+			
+			Date startdate = cal.getTime();
+			
+			cal.set(Calendar.HOUR_OF_DAY , 23);
+			
+			Date enddate = cal.getTime();
+			
+			List<TemperatureData> templist = this.tempRepo.findByIdentifierAndLogDateBetween(1, startdate, enddate);
+			
+			int size = templist.size();
+			
+			Assert.assertTrue(size == 0);
+			
+		} catch ( Exception e) {
+			Assert.fail();
+		}
+		
+	}
+	
+	@Test
 	public void testCelsiusRangeFail() {
 		
 		boolean valid = TemperatureUnits.isInValidRange('C', -300.00);
@@ -389,4 +519,6 @@ public class HomeDataPlatformApplicationTests {
 		}
 
 	}
+	
+	
 }

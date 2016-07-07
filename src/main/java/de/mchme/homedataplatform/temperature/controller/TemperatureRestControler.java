@@ -1,11 +1,11 @@
 package de.mchme.homedataplatform.temperature.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -13,8 +13,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import de.mchme.homedataplatform.data.TemperatureData;
-import de.mchme.homedataplatform.repositories.TemperatureRepository;
-import de.mchme.homedataplatform.units.TemperatureUnits;
 
 
 @RestController
@@ -23,7 +21,10 @@ public class TemperatureRestControler {
 	private final static Logger logger = LoggerFactory.getLogger(TemperatureRestControler.class);
 	
 	@Autowired
-	private TemperatureRepository temperatureRepo ;
+	private TemperatureHandler tempHandler ;
+	
+	public final static String ADDLIST = "/temperature/addlist";
+	public final static String ADDSINGLE = "/temperature/addsingle";
 
 	/**
 	 * will add new Temp Values to the database
@@ -32,53 +33,38 @@ public class TemperatureRestControler {
 	 * @return
 	 * @throws Exception
 	 */
-	@RequestMapping(value = "/temperature/add", method = RequestMethod.POST)
-	public ResponseEntity<String> addTemperature(
-			@RequestBody List<TemperatureData> temperatureList) 	 throws Exception {
+	@RequestMapping(value = ADDLIST, method = RequestMethod.POST)
+	public ResponseEntity<String> addTemperatureList(@RequestBody List<TemperatureData> temperatureList) 	 throws Exception {
 		
-		logger.debug("entering addTemperature");
+		logger.debug("entering addTemperatureList");
 		
-		HttpStatus httpStatus = HttpStatus.BAD_REQUEST;
+		ResponseEntity<String> response = this.tempHandler.addTemperatureList(temperatureList);
+
+		logger.debug("leaving addTemperatureList");
 		
-		boolean isValid = isValid(temperatureList);
-				
-		if(isValid) {
-			this.temperatureRepo.save(temperatureList);
-			httpStatus = HttpStatus.OK;		
-		}
+		return response ;		
 		
-		logger.debug("leaving addTemperature");
-		
-		return new ResponseEntity<>(httpStatus);
 	}
-		
 	
-	private boolean isValid(List<TemperatureData> temperatureList) {
-		boolean isValid = true;
-				
-		for(TemperatureData temp : temperatureList) {
-			if(!TemperatureUnits.isValid(temp.getUnit())) {
-				isValid = false;
-				break;
-			} else if (temp.getLogDate() == null) {
-				isValid = false;
-				break;
-			} else if (temp.getIdentifier() == null) {
-				isValid = false;
-				break;
-			} else if (temp.getTemperature() == null) {
-				isValid = false;
-				break;
-			} else if(!TemperatureUnits.isInValidRange(temp.getUnit(), temp.getTemperature())) {
-				isValid = false;
-				break;
-			}
-		}
+	@RequestMapping(value = ADDSINGLE, method = RequestMethod.POST)
+	public ResponseEntity<String> addSingleTemperature(@RequestBody TemperatureData temperature) 	 throws Exception {
 		
+		logger.debug("entering addSingleTemperature");
 		
-		return isValid ;
+		List<TemperatureData> list = new ArrayList<TemperatureData>();
+		list.add(temperature);
+		
+		ResponseEntity<String> response = this.tempHandler.addTemperatureList(list);
+
+		logger.debug("leaving addSingleTemperature");
+		
+		return response ;
 		
 	}
+	
+
+
+
 	
 	
 }

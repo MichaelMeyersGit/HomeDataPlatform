@@ -9,6 +9,8 @@ import javax.persistence.Id;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
+import de.mchme.homedataplatform.utils.RestUtils;
+
 @Entity
 public class TemperatureData  implements java.io.Serializable{
 
@@ -27,7 +29,7 @@ public class TemperatureData  implements java.io.Serializable{
 	
 	private char unit ;
 	
-	@JsonFormat(pattern="yyyy-MM-dd HH:mm")
+	@JsonFormat(pattern=RestUtils.JSON_DATE_FORMAT)
 	private Date logDate ;
 
 	public long getId() {
