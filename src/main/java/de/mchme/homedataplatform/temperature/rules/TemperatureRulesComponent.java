@@ -7,12 +7,11 @@ import org.easyrules.core.RulesEngineBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import de.mchme.homedataplatform.data.TemperatureData;
-import de.mchme.homedataplatform.notify.INotify;
+import de.mchme.homedataplatform.notify.NotificationFactory;
 import de.mchme.homedataplatform.repositories.TemperatureRepository;
 
 /**
@@ -36,10 +35,12 @@ public class TemperatureRulesComponent {
 	@Autowired
 	private TemperatureRepository tempRepository ;
 	
+//	@Autowired
+//	@Qualifier("mocknotify")
+//	private INotify notify ;
+	
 	@Autowired
-//	@Qualifier("${notification.system}")
-	@Qualifier("nma")
-	private INotify notify ;
+	private NotificationFactory notifyFactory ;
 	
 
 	
@@ -61,7 +62,7 @@ public class TemperatureRulesComponent {
 		TemperatureThresholdHasAlreadyReachedRule r2 = new TemperatureThresholdHasAlreadyReachedRule( timespan , threshhold,  tempRepository);
 		this.rulesEngine.registerRule(r2);
 		
-		SentNotificationRule r3 = new SentNotificationRule("" , "" , "" , notify);
+		SentNotificationRule r3 = new SentNotificationRule("" , "" , "" , this.notifyFactory.getNotificationSystem());
 		this.rulesEngine.registerRule(r3);
 				
 		

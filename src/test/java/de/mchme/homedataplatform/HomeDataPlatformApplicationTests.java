@@ -36,15 +36,17 @@ import org.springframework.test.web.servlet.ResultActions;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import de.mchme.homedataplatform.data.SimpleSensorStateData;
 import de.mchme.homedataplatform.data.TemperatureData;
 import de.mchme.homedataplatform.repositories.TemperatureRepository;
+import de.mchme.homedataplatform.simplesensor.controller.SimpleSensorStateRestController;
 import de.mchme.homedataplatform.temperature.controller.TemperatureRestControler;
 import de.mchme.homedataplatform.utils.RulesUtils;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = { HomeDataPlatformApplication.class , TestConfig.class } )
 @WebAppConfiguration
-@ActiveProfiles("example")
+@ActiveProfiles("unit")
 public class HomeDataPlatformApplicationTests {
 	
 //	private final static Logger logger = LoggerFactory.getLogger(HomeDataPlatformApplicationTests.class);
@@ -533,6 +535,67 @@ public class HomeDataPlatformApplicationTests {
 		Assert.assertTrue(size == 0);
 		
 	}
+	
+	@Test
+	public void testAddSingleSensorState() {
+		
+			
+		try {
+			SimpleSensorStateData dt = new SimpleSensorStateData();
+			dt.setIdentifier(1);
+			dt.setSensorType(3);
+			dt.setState(0);
+			
+			
+			GsonBuilder gsonBuilder = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm");
+			Gson gson = gsonBuilder.create();
+			
+			String json = gson.toJson(dt);
+			
+			ResultActions actions = mvc.perform(post(SimpleSensorStateRestController.ADD).contentType(MediaType.APPLICATION_JSON).characterEncoding("UTF-8").content(json));
+			
+			MvcResult result = actions.andReturn();
+			
+			int status = result.getResponse().getStatus();
+			
+			Assert.assertTrue(status == HttpStatus.OK.value());
+		
+		} catch (Exception e) {
+			Assert.fail();
+		}
+		
+	}
+	
+	@Test
+	public void testAddSingleSensorStateFail() {
+		
+			
+		try {
+			SimpleSensorStateData dt = new SimpleSensorStateData();
+			dt.setSensorType(3);
+			dt.setState(0);
+			
+			
+			GsonBuilder gsonBuilder = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm");
+			Gson gson = gsonBuilder.create();
+			
+			String json = gson.toJson(dt);
+			
+			ResultActions actions = mvc.perform(post(SimpleSensorStateRestController.ADD).contentType(MediaType.APPLICATION_JSON).characterEncoding("UTF-8").content(json));
+			
+			MvcResult result = actions.andReturn();
+			
+			int status = result.getResponse().getStatus();
+			
+			Assert.assertTrue(status == HttpStatus.BAD_REQUEST.value());
+		
+		} catch (Exception e) {
+			Assert.fail();
+		}
+		
+	}
+	
+	
 	
 	
 	
