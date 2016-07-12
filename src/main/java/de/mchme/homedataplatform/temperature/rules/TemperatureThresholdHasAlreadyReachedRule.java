@@ -5,13 +5,13 @@ import java.util.List;
 
 import org.easyrules.annotation.Action;
 import org.easyrules.annotation.Condition;
-import org.easyrules.annotation.Priority;
 import org.easyrules.annotation.Rule;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import de.mchme.homedataplatform.data.TemperatureData;
 import de.mchme.homedataplatform.repositories.TemperatureRepository;
+import de.mchme.homedataplatform.rules.BaseRule;
 import de.mchme.homedataplatform.utils.RulesUtils;
 
 /**
@@ -22,7 +22,7 @@ import de.mchme.homedataplatform.utils.RulesUtils;
  *
  */
 @Rule(name = "threshholreached" )
-public class TemperatureThresholdHasAlreadyReachedRule {
+public class TemperatureThresholdHasAlreadyReachedRule extends BaseRule {
 	
 private final static Logger logger = LoggerFactory.getLogger(TemperatureThresholdHasAlreadyReachedRule.class);
 	
@@ -35,7 +35,8 @@ private final static Logger logger = LoggerFactory.getLogger(TemperatureThreshol
 	
 	private TemperatureRepository tempRepository ;
 	
-	public TemperatureThresholdHasAlreadyReachedRule(int timespan , double threshhold, TemperatureRepository tempRepository) {
+	public TemperatureThresholdHasAlreadyReachedRule(int timespan , double threshhold, TemperatureRepository tempRepository, int mynumber, int[] ruleslist) {
+		super(mynumber, ruleslist) ;
 		this.threshhold = threshhold ;
 		this.timespan = timespan ;
 		this.tempRepository = tempRepository ;
@@ -67,9 +68,6 @@ private final static Logger logger = LoggerFactory.getLogger(TemperatureThreshol
 		logger.debug("enetering the Action");
 	}
 	
-	@Priority
-	public int getPriority() {
-		return RulesUtils.SECOND;
-	}
+
 
 }

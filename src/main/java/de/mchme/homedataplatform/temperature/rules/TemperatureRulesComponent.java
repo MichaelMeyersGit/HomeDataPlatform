@@ -35,12 +35,15 @@ public class TemperatureRulesComponent {
 	@Autowired
 	private TemperatureRepository tempRepository ;
 	
-//	@Autowired
-//	@Qualifier("mocknotify")
-//	private INotify notify ;
-	
 	@Autowired
 	private NotificationFactory notifyFactory ;
+	
+	
+	private static final int CONTAINS_THRESHOLD_RULE = 10 ;
+	private static final int TEMP_HAS_ALREADY_REACHED_RULE = 20 ;
+	private static final int SENT_NOTIFICATION_RULE = 30 ;
+	
+	private static final int[] RULES_LIST = { CONTAINS_THRESHOLD_RULE ,  TEMP_HAS_ALREADY_REACHED_RULE , SENT_NOTIFICATION_RULE} ;
 	
 
 	
@@ -56,13 +59,13 @@ public class TemperatureRulesComponent {
 		logger.debug("entering execute Rules");
 		this.rulesEngine.clearRules();
 		
-		ContainsTemperatureThreshholdRule r1 = new ContainsTemperatureThreshholdRule(temperatureList, this.threshhold);
+		ContainsTemperatureThreshholdRule r1 = new ContainsTemperatureThreshholdRule(temperatureList, this.threshhold, CONTAINS_THRESHOLD_RULE , RULES_LIST);
 		this.rulesEngine.registerRule(r1);
 		
-		TemperatureThresholdHasAlreadyReachedRule r2 = new TemperatureThresholdHasAlreadyReachedRule( timespan , threshhold,  tempRepository);
+		TemperatureThresholdHasAlreadyReachedRule r2 = new TemperatureThresholdHasAlreadyReachedRule( timespan , threshhold,  tempRepository, TEMP_HAS_ALREADY_REACHED_RULE , RULES_LIST);
 		this.rulesEngine.registerRule(r2);
 		
-		SentNotificationRule r3 = new SentNotificationRule("message" , "event" , "topic" , this.notifyFactory.getNotificationSystem());
+		SentNotificationRule r3 = new SentNotificationRule("message" , "event" , "topic" , this.notifyFactory.getNotificationSystem(), SENT_NOTIFICATION_RULE, RULES_LIST);
 		this.rulesEngine.registerRule(r3);
 				
 		

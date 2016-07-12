@@ -4,17 +4,16 @@ import java.util.List;
 
 import org.easyrules.annotation.Action;
 import org.easyrules.annotation.Condition;
-import org.easyrules.annotation.Priority;
 import org.easyrules.annotation.Rule;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import de.mchme.homedataplatform.data.TemperatureData;
-import de.mchme.homedataplatform.utils.RulesUtils;
+import de.mchme.homedataplatform.rules.BaseRule;
 
 
 @Rule(name = "threshholdrule" )
-public class ContainsTemperatureThreshholdRule {
+public class ContainsTemperatureThreshholdRule extends BaseRule {
 	
 	private final static Logger logger = LoggerFactory.getLogger(ContainsTemperatureThreshholdRule.class);
 	
@@ -22,7 +21,8 @@ public class ContainsTemperatureThreshholdRule {
 	
 	private double threshhold ;
 	
-	public ContainsTemperatureThreshholdRule(List<TemperatureData> tempList, double threshhold) {
+	public ContainsTemperatureThreshholdRule(List<TemperatureData> tempList, double threshhold, int mynumber, int[] ruleList) {
+		super(mynumber, ruleList) ;
 		this.tempList = tempList ;
 		this.threshhold = threshhold ;
 	}
@@ -51,10 +51,6 @@ public class ContainsTemperatureThreshholdRule {
 		logger.debug("enetering the Action");
 	}
 	
-	@Priority
-	public int getPriority() {
-		return RulesUtils.FIRST;
-	}
 
 	
 

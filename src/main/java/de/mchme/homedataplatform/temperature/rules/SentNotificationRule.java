@@ -2,16 +2,15 @@ package de.mchme.homedataplatform.temperature.rules;
 
 import org.easyrules.annotation.Action;
 import org.easyrules.annotation.Condition;
-import org.easyrules.annotation.Priority;
 import org.easyrules.annotation.Rule;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import de.mchme.homedataplatform.notify.INotify;
-import de.mchme.homedataplatform.utils.RulesUtils;
+import de.mchme.homedataplatform.rules.BaseRule;
 
 @Rule(name = "sentnotification" )
-public class SentNotificationRule {
+public class SentNotificationRule extends BaseRule {
 	
 	private final static Logger logger = LoggerFactory.getLogger(SentNotificationRule.class);
 	
@@ -20,7 +19,8 @@ public class SentNotificationRule {
 	private String event ;
 	private String topic ;
 	
-	public SentNotificationRule(String message, String event, String topic ,INotify notify) {
+	public SentNotificationRule(String message, String event, String topic ,INotify notify, int mynumber, int[] ruleslist) {
+		super(mynumber, ruleslist);
 		this.notify = notify ;
 		this.event = event ;
 		this.message = message ;
@@ -40,9 +40,6 @@ public class SentNotificationRule {
 		this.notify.sentNotification(event, message, topic);
 	}
 	
-	@Priority
-	public int getPriority() {
-		return RulesUtils.LAST;
-	}
+
 
 }
