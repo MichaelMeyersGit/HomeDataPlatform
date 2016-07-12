@@ -62,7 +62,7 @@ public class TemperatureRulesComponent {
 		TemperatureThresholdHasAlreadyReachedRule r2 = new TemperatureThresholdHasAlreadyReachedRule( timespan , threshhold,  tempRepository);
 		this.rulesEngine.registerRule(r2);
 		
-		SentNotificationRule r3 = new SentNotificationRule("" , "" , "" , this.notifyFactory.getNotificationSystem());
+		SentNotificationRule r3 = new SentNotificationRule("message" , "event" , "topic" , this.notifyFactory.getNotificationSystem());
 		this.rulesEngine.registerRule(r3);
 				
 		
